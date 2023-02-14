@@ -36,6 +36,9 @@ class Vector
         mag = magnitude
         Vector.new(@x / mag, @y / mag)
     end
+    def distance_to(vector2)
+        (self - vector2).magnitude
+    end
 end
 
 def PhysicsObject
