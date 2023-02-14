@@ -70,14 +70,28 @@ class Rope
                 pull(0.1)
                 count += 1
         #        break if count > @elasticity
+                if count > @strength
+                    remove_self
+                    break
+                end
             end
-            if count > @strength
-                remove_self
-            end
+           
 
     end
     def remove_self
         @shape.width = 0
         @parent.remove_rope(self)
+    end
+end
+
+
+class DynamicRope < Rope
+
+    def check_stuck?
+        if @level.point_collides?(@rope_end.pos)
+            @stuck = true
+            @rope_end = PhysicsObject.new(pos: @rope_end.pos.clone)
+            @length = @rope_end.pos.distance_to(@parent.pos)
+        end
     end
 end

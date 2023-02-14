@@ -10,10 +10,11 @@ class Swinger < GravityObject
     def throw_rope(target)
         direction = (target - self.pos).normalize * @rope_speed
         rope_end = GravityObject.new(pos: self.pos.clone, vel: direction)
-        r = Rope.new(rope_end: rope_end, parent: self, level: @level)
+        r = DynamicRope.new(rope_end: rope_end, parent: self, level: @level)
         r.draw_init
         @ropes << r
     end
+    
     def remove_rope(rope)
         @ropes.delete(rope)
     end
