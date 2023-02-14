@@ -36,4 +36,10 @@ class Level
         end
 
     end
+    def point_collides?(point)
+        for piece in @pieces
+            return true if piece.contains_point(point)
+        end
+        return false
+    end
 end
