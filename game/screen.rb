@@ -9,8 +9,8 @@ class Screen
 
     def draw_frame
         @@screenpos -= 1
-        p @image1.x
-        p @image2.x
+    #    p @image1.x
+   #     p @image2.x
         @image1.x = @@screenpos % (@width * 2) - @width
         @image2.x = (@@screenpos + @width) % (width * 2) - @width
     end

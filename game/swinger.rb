@@ -46,7 +46,6 @@ class Swinger < GravityObject
     def swing_back
         if @swinging_forward
             if @vel.x > 0
-                p "vel x + " + Math.sin(@rotate).to_s
                 @vel.x += Math.sin(@rotate)
                 @vel.y += Math.cos(@rotate)
             else
@@ -59,7 +58,6 @@ class Swinger < GravityObject
     def swing_forward
         if !@swinging_forward
             if @vel.x <= 0
-                p "vel x + " + Math.sin(@rotate).to_s
                 @vel.x += Math.sin(@rotate)
                 @vel.y += Math.cos(@rotate)
             else
@@ -93,11 +91,14 @@ class Swinger < GravityObject
 
             r.draw_frame
         end
+        upside_down = !(@ropes.size == 0) && (@rotate < -Math::PI || @rotate >= 0)
         if @swinging_forward
             @shape.x = -500
             @shape2.x = -500
-            if @vel.x < 0
+            
+            if @vel.x < 0 &&  !upside_down || (upside_down && @vel.x > 0)
                 @shape4.x = @pos.x - 80
+
                 @shape4.y = @pos.y - 80
                 @shape3.x = -200
                 @shape3.y = -200
@@ -112,7 +113,7 @@ class Swinger < GravityObject
         else
             @shape3.x = -500
             @shape4.x = -500
-            if @vel.x < 0
+            if @vel.x < 0 &&  !upside_down || (upside_down && @vel.x > 0)
                 @shape2.x = @pos.x - 80
                 @shape2.y = @pos.y - 80
                 @shape.x = -200
@@ -125,6 +126,7 @@ class Swinger < GravityObject
                 @shape2.x = -200
                 @shape2.y = -200
             end
+       
         end
     end
     def pull(strength)
