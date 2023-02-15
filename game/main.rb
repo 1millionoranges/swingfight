@@ -16,7 +16,7 @@ piece4 = Piece.new(pos: Vector.new(1000,500), size: 30)
 
 for i in (0..20) do 
     for j in (0..20) do
-    piece = Piece.new(pos: Vector.new(i * 400, j * 400), size: 30)
+    piece = Piece.new(pos: Vector.new(i * 400, j * 400), size: 30, imageurl: "cloud")
     level.add_piece(piece)
     end
 end
@@ -45,11 +45,32 @@ on :key_down do |event|
     if event.key == "escape"
         close
     end
-    if event.key == "a"
+
+    case event.key
+    when "a"
         s.swing_back
-    end
-    if event.key == "d"
+    when "w" 
+        s.throw_rope_left(Vector.new(-2,-1))
+    when "e"
+        s.throw_rope_left(Vector.new(0,-1))
+    when "r"
+        s.throw_rope_left(Vector.new(2,-1))
+    when "c"
+        s.drop_left_rope
+    when "u"
+        s.throw_rope_right(Vector.new(-2,-1))
+    when "i"
+        s.throw_rope_right(Vector.new(0,-1))
+    when "o"
+        s.throw_rope_right(Vector.new(2,-1))
+    when "n"
+        s.drop_right_rope
+    when "l"
         s.swing_forward
+    when "d"
+        s.swing_forward
+    when "6"
+        s.remove_all_ropes
     end
 end
 

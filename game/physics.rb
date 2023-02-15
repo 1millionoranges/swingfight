@@ -85,16 +85,19 @@ class GravityObject < PhysicsObject
     def initialize(args)
         
         super(args)
-        @floor = args[:floor] || 800
+        @floor = args[:floor] || 2400
         @width = args[:width] || 1500
         @@gravity_objects << self
     end
     def move!(time_interval = 0.1)
- #       if calc_next_pos.y > @floor || calc_next_pos.y < 0
-   #         @vel.y *= -0.8
-  #      end
-    #    if calc_next_pos.x < 0 || calc_next_pos.x > width
-   #         @vel.x *= -0.8
+        if calc_next_pos.y > @floor #|| calc_next_pos.y < 0
+            @vel.y = 0
+            @vel.x = 0
+            @pos.y = @floor
+        end
+
+ #       if calc_next_pos.x < 0 || calc_next_pos.x > width
+  #          @vel.x *= -0.8
    #     end
         super(time_interval)
     end

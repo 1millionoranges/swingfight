@@ -7,13 +7,17 @@ class Swinger < GravityObject
         @rope_speed = args[:rope_speed] || 6
         @level = args[:level]
         @ropes = []
+        @maxropes = args[:maxropes] || 2
     end
     def throw_rope(target)
-        direction = (target - self.pos).normalize * @rope_speed
-        rope_end = GravityObject.new(pos: self.pos.clone, vel: direction)
-        r = DynamicRope.new(rope_end: rope_end, parent: self, level: @level)
-        r.draw_init
-        @ropes << r
+        if @ropes.size < @maxropes
+            direction = (target - self.pos).normalize * @rope_speed
+            rope_end = PhysicsObject.new(pos: self.pos.clone, vel: direction)
+            r = DynamicRope.new(rope_end: rope_end, parent: self, level: @level)
+            r.draw_init
+            @ropes << r
+        end
+        return r
     end
     
     def remove_rope(rope)
@@ -29,10 +33,28 @@ class Swinger < GravityObject
         if keys_pressed.include?('space')
             pull(2)
         end
-        super(time_interval)
+        
         for r in @ropes do
             r.tick!(time_interval)
+        
         end
+        super(time_interval)
+    end
+    def throw_rope_left(dir)
+        
+        @left_rope = throw_rope(@pos + dir) if !@left_rope
+    end
+    def throw_rope_right(dir)
+        @right_rope = throw_rope(@pos + dir) if !@right_rope
+    end
+    def drop_left_rope
+        @left_rope.remove_self if @left_rope
+        @left_rope = nil
+    end
+    def drop_right_rope
+        
+        @right_rope.remove_self if @right_rope
+        @right_rope = nil
     end
     def draw_init
         @shape = Image.new('../char_back_t.png', width: 160, height: 160)

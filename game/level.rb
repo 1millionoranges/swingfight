@@ -13,7 +13,7 @@ class Piece
         when "cloud"
             @imageurl = "../cloud.png"
         when "plane"
-            @imageurl = "../plane.png"
+            @imageurl = "../airplane.png"
         end
 
     end
@@ -43,7 +43,7 @@ class Level
         @backgroundimage2 = Image.new('../citybackground.png', z: -101)
         @pieces = []
         @screenpos = Vector.new(0,0)
-        @margin = 500
+        @margin = 400
         @width = 1500
         @height = 800
     end
@@ -55,6 +55,7 @@ class Level
         for piece in @pieces
             piece.draw_init
         end
+    
     end
     def draw_frame
         for piece in @pieces
