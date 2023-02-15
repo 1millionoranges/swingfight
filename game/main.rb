@@ -27,7 +27,7 @@ on :mouse_down do |event|
     when :left
         s.throw_rope(Vector.new(event.x, event.y))
     when :right
-        s.remove_all_ropes
+        s.drop_rope_and_pull
     end
 end
 keys_pressed = []
@@ -35,6 +35,12 @@ on :key_down do |event|
     keys_pressed << event.key
     if event.key == "escape"
         close
+    end
+    if event.key == "a"
+        s.swing_back
+    end
+    if event.key == "d"
+        s.swing_forward
     end
 end
 

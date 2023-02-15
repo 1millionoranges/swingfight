@@ -42,6 +42,18 @@ class Vector
     def clone
         Vector.new(@x, @y)
     end
+    def get_angle
+        if @x != 0
+            
+            ans = Math.atan(@y / @x)
+            if @x < 0
+                ans -= (Math::PI)
+            end
+        else
+            return 0
+        end
+        return ans
+    end
 end
 
 class PhysicsObject

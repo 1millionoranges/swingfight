@@ -5,7 +5,7 @@ class Rope
         @length = args[:length] || 340
         @stuck = false
         @elasticity = args[:elasticity] || 10
-        @strength = args[:strength] || 600
+        @strength = args[:strength] || 9000
         parent = args[:parent] || nil
         if parent
             @parent = parent
@@ -15,6 +15,9 @@ class Rope
     end
     def current_length
         @rope_end.pos.distance_to(@parent.pos)
+    end
+    def direction
+        (@rope_end.pos - @parent.pos).normalize
     end
     def draw_init
         @shape = Line.new(x1: @rope_end.pos.x, y1: @rope_end.pos.y, x2: @parent.pos.x, y2: @parent.pos.y, width: 3, color: 'white')
