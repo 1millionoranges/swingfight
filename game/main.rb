@@ -9,15 +9,15 @@ set width: 1500
 
 level = Level.new('args')
 piece = Piece.new(pos: Vector.new(200,200), size: 30)
-piece2 = Piece.new(pos: Vector.new(500,200), size: 30)
+piece2 = Piece.new(pos: Vector.new(1000,200), size: 30)
 piece3 = Piece.new(pos: Vector.new(200,500), size: 30)
-piece4 = Piece.new(pos: Vector.new(500,500), size: 30)
+piece4 = Piece.new(pos: Vector.new(1000,500), size: 30)
 level.add_piece(piece)
 level.add_piece(piece2)
 level.add_piece(piece3)
 level.add_piece(piece4)
 level.draw_init
-
+Image.new('../citybackground.png', z: -10)
 s = Swinger.new(pos: Vector.new(300,300), size: 10, rope_speed: 10, level: level)
 s.throw_rope(Vector.new(600,600))
 s.draw_init
