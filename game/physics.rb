@@ -57,6 +57,7 @@ class Vector
 end
 
 class PhysicsObject
+
     attr_reader :pos
     attr_reader :vel
     attr_reader :mass
@@ -89,9 +90,9 @@ class GravityObject < PhysicsObject
         @@gravity_objects << self
     end
     def move!(time_interval = 0.1)
-        if calc_next_pos.y > @floor || calc_next_pos.y < 0
-            @vel.y *= -0.8
-        end
+ #       if calc_next_pos.y > @floor || calc_next_pos.y < 0
+   #         @vel.y *= -0.8
+  #      end
         if calc_next_pos.x < 0 || calc_next_pos.x > width
             @vel.x *= -0.8
         end

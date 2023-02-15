@@ -11,7 +11,7 @@ class Piece
         @pos.distance_to(other_piece.pos) < @size + other_piece.size
     end
     def draw_init
-        Image.new('../gargoyle.png', x: @pos.x - @size, y: @pos.y - @size, width: @size * 2, height: @size * 2)
+        Image.new('../airplane.png', x: @pos.x - @size, y: @pos.y - @size, width: @size * 2, height: @size * 2)
   #      Circle.new(x: @pos.x, y: @pos.y, radius: @size, color: 'blue')
     end
     def draw_frame
