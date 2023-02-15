@@ -2,7 +2,7 @@ class Rope
     def initialize(args)
         @rope_end = args[:rope_end]
         @level = args[:level]
-        @length = args[:length] || 340
+        @length = args[:length] || 600
         @stuck = false
         @elasticity = args[:elasticity] || 10
         @strength = args[:strength] || 9000
@@ -34,10 +34,14 @@ class Rope
 
     end
     def draw_frame
-        @shape.x1 = @rope_end.pos.x
-        @shape.y1 = @rope_end.pos.y
-        @shape.x2 = @parent.pos.x
-        @shape.y2 = @parent.pos.y
+        @level.transform(@rope_end.pos) do |newpos|
+            @shape.x1 = newpos.x
+            @shape.y1 = newpos.y
+        end
+        @level.transform(@parent.pos) do |newpos|
+            @shape.x2 = newpos.x
+            @shape.y2 = newpos.y
+        end
         stretched = (current_length.to_f / @length.to_f)
         @shape.color = [stretched, 1-stretched,1-stretched,1]
     end

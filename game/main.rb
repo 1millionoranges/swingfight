@@ -13,6 +13,13 @@ piece = Piece.new(pos: Vector.new(200,200), size: 30)
 piece2 = Piece.new(pos: Vector.new(1000,200), size: 30)
 piece3 = Piece.new(pos: Vector.new(200,500), size: 30)
 piece4 = Piece.new(pos: Vector.new(1000,500), size: 30)
+
+for i in (0..20) do 
+    for j in (0..20) do
+    piece = Piece.new(pos: Vector.new(i * 400, j * 400), size: 30)
+    level.add_piece(piece)
+    end
+end
 level.add_piece(piece)
 level.add_piece(piece2)
 level.add_piece(piece3)
@@ -21,11 +28,13 @@ level.draw_init
 s = Swinger.new(pos: Vector.new(300,300), size: 10, rope_speed: 10, level: level)
 s.throw_rope(Vector.new(600,600))
 s.draw_init
-screen = Screen.new()
+#screen = Screen.new()
 on :mouse_down do |event|
     case event.button
     when :left
-        s.throw_rope(Vector.new(event.x, event.y))
+        level.reverse_transform(Vector.new(event.x, event.y)) do |newpos|
+            s.throw_rope(newpos)
+        end
     when :right
         s.remove_all_ropes
     end
@@ -51,7 +60,7 @@ end
 update do
     GravityObject.apply_gravity_to_everything
     level.draw_frame
-    screen.draw_frame
+   # screen.draw_frame
     s.draw_frame
     s.tick!(keys_pressed)
 end

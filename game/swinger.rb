@@ -3,6 +3,7 @@ class Swinger < GravityObject
     
     def initialize(args)
         super(args)
+        @screen = args[:screen]
         @rope_speed = args[:rope_speed] || 6
         @level = args[:level]
         @ropes = []
@@ -38,7 +39,7 @@ class Swinger < GravityObject
         @shape2 = Image.new('../char_back_backwards_t.png', width: 160, height: 160)
         @shape3 = Image.new('../char_for.png', width: 160, height: 160)
         @shape4 = Image.new('../char_for_back.png', width: 160, height: 160)
-        @swinging_forward = true
+        @swinging_forward = false
         for r in @ropes do
             r.draw_init
         end
@@ -75,6 +76,7 @@ class Swinger < GravityObject
         end
     end
     def draw_frame
+
         if @ropes.size == 0
             if @rotate > @vel.get_angle
                 @rotate -= 0.03
@@ -92,42 +94,46 @@ class Swinger < GravityObject
             r.draw_frame
         end
         upside_down = !(@ropes.size == 0) && (@rotate < -Math::PI || @rotate >= 0)
-        if @swinging_forward
-            @shape.x = -500
-            @shape2.x = -500
-            
-            if @vel.x < 0 &&  !upside_down || (upside_down && @vel.x > 0)
-                @shape4.x = @pos.x - 80
-
-                @shape4.y = @pos.y - 80
-                @shape3.x = -200
-                @shape3.y = -200
-                @shape4.rotate = 90 + @rotate * (180 / Math::PI)
+        @level.transform(@pos - Vector.new(80,80)) do |newpos|
+            if @swinging_forward
+                @shape.x = -500
+                @shape2.x = -500
+                
+                if @vel.x < 0 &&  !upside_down || (upside_down && @vel.x > 0)
+                    
+                        
+                    @shape4.x = newpos.x
+                    @shape4.y = newpos.y
+                    @shape3.x = -200
+                    @shape3.y = -200
+                    @shape4.rotate = 90 + @rotate * (180 / Math::PI)
+                else
+                    @shape3.x = newpos.x
+                    @shape3.y = newpos.y
+                    @shape3.rotate = 90 + @rotate * (180 / Math::PI)
+                    @shape4.x = -200
+                    @shape4.y = -200
+                end
             else
-                @shape3.x = @pos.x - 80
-                @shape3.y = @pos.y - 80
-                @shape3.rotate = 90 + @rotate * (180 / Math::PI)
-                @shape4.x = -200
-                @shape4.y = -200
+                @shape3.x = -500
+                @shape4.x = -500
+                if @vel.x < 0 &&  !upside_down || (upside_down && @vel.x > 0)
+                    @shape2.x = newpos.x
+                    @shape2.y = newpos.y
+                    @shape.x = -200
+                    @shape.y = -200
+                    @shape2.rotate = 90 + @rotate * (180 / Math::PI)
+                else
+                    @shape.x = newpos.x
+                    @shape.y = newpos.y
+                    @shape.rotate = 90 + @rotate * (180 / Math::PI)
+                    @shape2.x = -200
+                    @shape2.y = -200
+                end
+        
             end
-        else
-            @shape3.x = -500
-            @shape4.x = -500
-            if @vel.x < 0 &&  !upside_down || (upside_down && @vel.x > 0)
-                @shape2.x = @pos.x - 80
-                @shape2.y = @pos.y - 80
-                @shape.x = -200
-                @shape.y = -200
-                @shape2.rotate = 90 + @rotate * (180 / Math::PI)
-            else
-                @shape.x = @pos.x - 80
-                @shape.y = @pos.y - 80
-                @shape.rotate = 90 + @rotate * (180 / Math::PI)
-                @shape2.x = -200
-                @shape2.y = -200
-            end
-       
         end
+        @level.keep_in_focus(self.pos)
     end
     def pull(strength)
         for r in @ropes
