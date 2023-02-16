@@ -1,4 +1,4 @@
-class Piece
+class Piece < PhysicsObject
     attr_reader :size
     attr_accessor :level
     def initialize(args)
@@ -6,14 +6,14 @@ class Piece
         @pos = args[:pos] || 0
         @level = args[:level] || nil
 
-        @imageurl = args[:imageurl] || '../gargoyle.png'
+        @imageurl = args[:imageurl] || '../assets/images/gargoyle.png'
         case @imageurl
         when "gargoyle"
-            @imageurl = "../gargoyle.png"
+            @imageurl = "../assets/images/gargoyle.png"
         when "cloud"
-            @imageurl = "../cloud.png"
+            @imageurl = "../assets/images/cloud.png"
         when "plane"
-            @imageurl = "../airplane.png"
+            @imageurl = "../assets/images/airplane.png"
         end
 
     end
@@ -33,14 +33,68 @@ class Piece
             @image.y = newpos.y
         end
     end
+    
 end
+class Block < Piece
+    attr_accessor :level
+    def contains_point(point)
+        if @pos.distance_to(point) < @size
+            @level.remove_piece(self)
+            @image.x = -400
+            new_blockPiece = BlockPiece.new(pos: @pos.clone, size: @size)
+            @level.add_piece(new_blockPiece)
+            return true
+        end
+    end
+    def draw_init
+        @image = Circle.new(x: @pos.x, y: @pos.y, radius: @size, color: 'red')
+    end
+    def draw_frame
+        @level.transform(@pos) do |newpos|
+            @image.x = newpos.x
+            @image.y = newpos.y
+        end
+    end
+end
+
+class BlockPiece < GravityObject
+
+    attr_accessor :level
+
+    def initialize(args)
+        @size = args[:size] || 0
+        @level = args[:level] || nil
+        
+        super(args)
+        draw_init
+    end
+    def draw_init
+        @image = Circle.new(x: @pos.x, y: @pos.y, radius: @size, color: 'red')
+    end
+    def draw_frame
+        @level.transform(@pos) do |newpos|
+            @image.x = newpos.x
+            @image.y = newpos.y
+        end
+        tick!(0.1)
+    end
+    def contains_point(point)
+        @pos.distance_to(point) < @size
+    end
+    def collides_with(other_piece)
+        @pos.distance_to(other_piece.pos) < @size + other_piece.size
+    end
+
+end
+
+
 class Level
     
 
     def initialize(args)
-        @image1 = Image.new('../cityforeground.png', z: -100)
-        @backgroundimage1 = Image.new('../citybackground.png', z: -101)
-        @backgroundimage2 = Image.new('../citybackground.png', z: -101)
+        @image1 = Image.new('../assets/images/cityforeground.png', z: -100)
+        @backgroundimage1 = Image.new('../assets/images/citybackground.png', z: -101)
+        @backgroundimage2 = Image.new('../assets/images/citybackground.png', z: -101)
         @pieces = []
         @screenpos = Vector.new(0,0)
         @margin = 400
@@ -49,7 +103,13 @@ class Level
     end
     def add_piece(piece)
         @pieces << piece
+
         piece.level = self
+
+    end
+    def remove_piece(piece)
+
+        @pieces.delete(piece)
     end
     def draw_init
         for piece in @pieces

@@ -57,11 +57,12 @@ class Vector
 end
 
 class PhysicsObject
-
+    @@physics_objects = []
     attr_reader :pos
     attr_reader :vel
     attr_reader :mass
     def initialize(args)
+        @@physics_objects << self
         @mass = args[:mass] || 1
         @pos = args[:pos] || Vector.new(0,0)
         @vel = args[:vel] || Vector.new(0,0)
@@ -69,6 +70,7 @@ class PhysicsObject
     end
     def move!(time_interval = 0.1)
         @pos.add!(@vel)
+     #   @vel *= 0.99
     end
     def tick!(time_interval)
         move!(time_interval)
@@ -79,21 +81,35 @@ class PhysicsObject
         end
         @vel += accel * time_interval
     end
+    def self.tick_all(time_interval = 0.1)
+        for obj in @@physics_objects
+            obj.tick(time_interval)
+        end
+
+    end
 end
 class GravityObject < PhysicsObject
     @@gravity_objects = []
     def initialize(args)
         
         super(args)
-        @floor = args[:floor] || 2400
+        @floor = args[:floor] || 2300
         @width = args[:width] || 1500
         @@gravity_objects << self
     end
     def move!(time_interval = 0.1)
         if calc_next_pos.y > @floor #|| calc_next_pos.y < 0
-            @vel.y = 0
-            @vel.x = 0
-            @pos.y = @floor
+            if Walker === self
+                @vel.y *= -0.3
+                @vel.x *= 0.9
+                if @vel.x.abs < 0.1 
+                    become_grounded
+                end
+            else
+                @vel.y = 0
+                @vel.x = 0
+                @pos.y = @floor
+            end
         end
 
  #       if calc_next_pos.x < 0 || calc_next_pos.x > width
@@ -107,7 +123,7 @@ class GravityObject < PhysicsObject
     def delete_self
         @@gravity_objects.delete(self)
     end
-    def self.apply_gravity_to_everything(grav_vector=Vector.new(0,1), time_interval = 0.1)
+    def self.apply_gravity_to_everything(grav_vector=Vector.new(0,2), time_interval = 0.1)
         for obj in @@gravity_objects
             obj.apply_gravity!(grav_vector, time_interval)
         end
@@ -116,3 +132,4 @@ class GravityObject < PhysicsObject
         @pos + @vel
     end
 end
+

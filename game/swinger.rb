@@ -8,12 +8,14 @@ class Swinger < GravityObject
         @level = args[:level]
         @ropes = []
         @maxropes = args[:maxropes] || 2
+
+        
     end
     def throw_rope(target)
         if @ropes.size < @maxropes
             direction = (target - self.pos).normalize * @rope_speed
             rope_end = PhysicsObject.new(pos: self.pos.clone, vel: direction)
-            r = DynamicRope.new(rope_end: rope_end, parent: self, level: @level)
+            r = StretchyRope.new(rope_end: rope_end, parent: self, level: @level)
             r.draw_init
             @ropes << r
         end
@@ -28,6 +30,7 @@ class Swinger < GravityObject
             r = @ropes[0]
             r.remove_self
         end
+        swing_back
     end
     def tick!(keys_pressed, time_interval=0.1)
         if keys_pressed.include?('space')
@@ -40,6 +43,7 @@ class Swinger < GravityObject
         end
         super(time_interval)
     end
+
     def throw_rope_left(dir)
         
         @left_rope = throw_rope(@pos + dir) if !@left_rope
@@ -57,10 +61,10 @@ class Swinger < GravityObject
         @right_rope = nil
     end
     def draw_init
-        @shape = Image.new('../char_back_t.png', width: 160, height: 160)
-        @shape2 = Image.new('../char_back_backwards_t.png', width: 160, height: 160)
-        @shape3 = Image.new('../char_for.png', width: 160, height: 160)
-        @shape4 = Image.new('../char_for_back.png', width: 160, height: 160)
+        @shape = Image.new('../assets/images/char_back_t.png', width: 160, height: 160)
+        @shape2 = Image.new('../assets/images/char_back_backwards_t.png', width: 160, height: 160)
+        @shape3 = Image.new('../assets/images/char_for.png', width: 160, height: 160)
+        @shape4 = Image.new('../assets/images/char_for_back.png', width: 160, height: 160)
         @swinging_forward = false
         for r in @ropes do
             r.draw_init
@@ -81,7 +85,7 @@ class Swinger < GravityObject
     def swing_forward
         if !@swinging_forward
             if @vel.x <= 0
-                @vel.x += Math.sin(@rotate)
+                @vel.x += Math.sin(@rotate) * 2
                 @vel.y += Math.cos(@rotate)
             else
                 @vel.x -= Math.sin(@rotate)
@@ -98,14 +102,13 @@ class Swinger < GravityObject
         end
     end
     def draw_frame
-
         if @ropes.size == 0
             if @rotate > @vel.get_angle
                 @rotate -= 0.03
             elsif @rotate < @vel.get_angle
                 @rotate += 0.03
             end
-            @swinging_forward = false
+          #  @swinging_forward = false
         end
         for r in @ropes do
             @rotate = r.direction.get_angle
@@ -156,11 +159,15 @@ class Swinger < GravityObject
             end
         end
         @level.keep_in_focus(self.pos)
+
     end
+    
+
     def pull(strength)
         for r in @ropes
             r.pull(strength)
         end
 
     end
+
 end

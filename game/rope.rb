@@ -102,3 +102,30 @@ class DynamicRope < Rope
         end
     end
 end
+
+
+
+class StretchyRope < DynamicRope
+    def initialize(args)
+        super(args)
+        @elasticity = args[:elasticity] || 3
+    end
+
+
+    def apply_tension
+            stretched = current_length / @length
+            if stretched > 1
+                pull((stretched * @elasticity))
+            end
+            count = 0
+            while @parent.calc_next_pos.distance_to(@rope_end.pos) > @length
+                pull(0.1)
+                count += 1
+        #        break if count > @elasticity
+                if count > 100
+
+                    break
+                end
+            end        
+    end
+end

@@ -3,8 +3,8 @@ class Screen
     def initialize
         @@screenpos = 0
         @width = 1500
-        @image1 = Image.new('../citybackground.png', z: -100)
-        @image2 = Image.new('../citybackground.png', z: -100)
+        @image1 = Image.new('..assets/images/citybackground.png', z: -100)
+        @image2 = Image.new('..assets/images/citybackground.png', z: -100)
     end
 
     def draw_frame

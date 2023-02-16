@@ -4,7 +4,6 @@ require './level.rb'
 require './swinger.rb'
 require './rope.rb'
 require './screen.rb'
-require './walker.rb'
 set title: "Spaceship thing"
 set height: 800
 set width: 1500
@@ -17,7 +16,7 @@ piece4 = Piece.new(pos: Vector.new(1000,500), size: 30)
 
 for i in (0..20) do 
     for j in (0..20) do
-    piece = Block.new(pos: Vector.new(i * 400, j * 400), size: 60, imageurl: "gargoyle")
+    piece = Piece.new(pos: Vector.new(i * 400, j * 400), size: 30, imageurl: "cloud")
     level.add_piece(piece)
     end
 end
@@ -26,7 +25,7 @@ level.add_piece(piece2)
 level.add_piece(piece3)
 level.add_piece(piece4)
 level.draw_init
-s = Walker.new(pos: Vector.new(300,300), size: 10, rope_speed: 10, level: level)
+s = Swinger.new(pos: Vector.new(300,300), size: 10, rope_speed: 10, level: level)
 s.throw_rope(Vector.new(600,600))
 s.draw_init
 #screen = Screen.new()
@@ -74,6 +73,7 @@ on :key_down do |event|
         s.remove_all_ropes
     end
 end
+
 on :key_up do |event|
     keys_pressed.delete(event.key)
 end
