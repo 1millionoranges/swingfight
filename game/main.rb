@@ -17,7 +17,7 @@ piece4 = Piece.new(pos: Vector.new(1000,500), size: 30)
 
 for i in (0..20) do 
     for j in (0..20) do
-    piece = Block.new(pos: Vector.new(i * 400, j * 400), size: 60, imageurl: "gargoyle")
+    piece = Piece.new(pos: Vector.new(i * 400, j * 400), size: 60, imageurl: "gargoyle")
     level.add_piece(piece)
     end
 end

@@ -100,10 +100,14 @@ class GravityObject < PhysicsObject
     def move!(time_interval = 0.1)
         if calc_next_pos.y > @floor #|| calc_next_pos.y < 0
             if Walker === self
-                @vel.y *= -0.3
-                @vel.x *= 0.9
-                if @vel.x.abs < 0.1 
-                    become_grounded
+                if @vel.y.abs > 1
+                    self.splat
+                else
+                    @vel.y *= -0.3
+                    @vel.x *= 0.9
+                    if @vel.x.abs < 0.1 
+                        become_grounded
+                    end
                 end
             else
                 @vel.y = 0

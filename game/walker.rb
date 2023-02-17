@@ -2,6 +2,7 @@ class Walker < Swinger
 
     def initialize(args)
         super(args)
+        @dead = false
         @grounded = false
         @spritesheet = Sprite.new('../assets/images/walking_spritesheet_test.png',width: 50,height: 80, time: 250,
         animations: {walk: [
@@ -9,7 +10,12 @@ class Walker < Swinger
             {x: 50, y: 80, width: 50, height: 80, time: 100},
             {x: 100, y: 80, width: 50, height: 80, time: 100}],
             nothing: [{x: 0, y: 0, width: 1, height: 1, time: 1000}],
-            stand: [{x: 0, y: 0, width: 50, height: 80, time: 1000}]
+            stand: [{x: 0, y: 0, width: 50, height: 80, time: 1000}],
+            splat: [{x: 150, y: 80, width: 70, height: 80, time: 200},
+            {x: 220, y: 80, width: 70, height: 80, time: 200},
+            {x: 290, y: 80, width: 70, height: 80, time: 200},
+            {x: 360, y: 80, width: 70, height: 80, time: 200}
+            ]
         })
         @spritesheet.x = -300
         @spritesheet.y = 10
@@ -28,26 +34,27 @@ class Walker < Swinger
     end
     def tick!(keys_pressed, time_interval=0.1)
 
-        
-        if !@grounded
-      #      become_grounded if keys_pressed.include?('7')
-            super(keys_pressed, time_interval)
-        else
-            jump if keys_pressed.include?('space')
-            if keys_pressed.include?('shift')
-                walk_speed = 10
+        if !@dead
+            if !@grounded
+        #      become_grounded if keys_pressed.include?('7')
+                super(keys_pressed, time_interval)
             else
-                walk_speed = 10
-            end
-            if keys_pressed.include?("a")
-                walk_left
-                @pos.x -= walk_speed
-            elsif keys_pressed.include?("d")
-                walk_right
-                @pos.x += walk_speed
-            else
-                stand
-            end
+                jump if keys_pressed.include?('space')
+                if keys_pressed.include?('shift')
+                    walk_speed = 10
+                else
+                    walk_speed = 10
+                end
+                if keys_pressed.include?("a")
+                    walk_left
+                    @pos.x -= walk_speed
+                elsif keys_pressed.include?("d")
+                    walk_right
+                    @pos.x += walk_speed
+                else
+                    stand
+                end
+        end
         end
     end
     def become_grounded
@@ -77,5 +84,15 @@ class Walker < Swinger
         @rotate = -3
         @grounded = false
     end
-
+    def splat
+        @shape.x = -200
+        @shape2.x = -200
+        @shape3.x = -200
+        @shape4.x = -200
+        @spritesheet.width = 200
+        @spritesheet.height = 150
+        @spritesheet.play animation: :splat, loop: true
+        @dead = true
+        @grounded = true
+    end
 end
