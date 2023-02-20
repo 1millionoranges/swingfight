@@ -98,27 +98,12 @@ class GravityObject < PhysicsObject
         @@gravity_objects << self
     end
     def move!(time_interval = 0.1)
-        if calc_next_pos.y > @floor #|| calc_next_pos.y < 0
-            if Walker === self
-                if @vel.y.abs > 20
-                    self.splat
-                else
-                    @vel.y *= -0.3
-                    @vel.x *= 0.9
-                    if @vel.x.abs < 0.1 
-                        become_grounded
-                    end
-                end
-            else
+        if calc_next_pos.y > @floor
                 @vel.y = 0
                 @vel.x = 0
                 @pos.y = @floor
-            end
         end
 
- #       if calc_next_pos.x < 0 || calc_next_pos.x > width
-  #          @vel.x *= -0.8
-   #     end
         super(time_interval)
     end
     def apply_gravity!(grav_vector=Vector.new(0,1), time_interval = 0.1)

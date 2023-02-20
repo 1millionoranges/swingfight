@@ -4,7 +4,6 @@ class Rope
         @level = args[:level]
         @length = args[:length] || 600
         @stuck = false
-        @elasticity = args[:elasticity] || 10
         @strength = args[:strength] || 9000
         parent = args[:parent] || nil
         if parent
@@ -53,37 +52,28 @@ class Rope
     end
     def check_length
         if !@stuck
-        if @rope_end.pos.distance_to(@parent.pos) > @length
-            @shape.width = 0
-            @parent.remove_rope(self)
-        end
+            if @rope_end.pos.distance_to(@parent.pos) > @length
+                @shape.width = 0
+                @parent.remove_rope(self)
+            end
         end
     end
     def pull(strength)
         if @stuck
-        dir = (@rope_end.pos - @parent.pos).normalize
-        @parent.apply_force!(dir * strength)
+            dir = (@rope_end.pos - @parent.pos).normalize
+            @parent.apply_force!(dir * strength)
         end
     end
-    def apply_tension
-     
-        #    excess = current_length / @length - 1
-        #    if excess > 0
-        #        pull(@elasticity * excess)
-         #       pull(0.1)
-        #    end
-            count = 0
-            while @parent.calc_next_pos.distance_to(@rope_end.pos) > @length
-                pull(0.1)
-                count += 1
-        #        break if count > @elasticity
-                if count > @strength
-                    remove_self
-                    break
-                end
+    def apply_tension    
+        count = 0
+        while @parent.calc_next_pos.distance_to(@rope_end.pos) > @length
+            pull(0.1)
+            count += 1
+            if count > @strength
+                remove_self
+                break
             end
-           
-
+        end
     end
     def remove_self
         @shape.width = 0
@@ -113,19 +103,17 @@ class StretchyRope < DynamicRope
 
 
     def apply_tension
-            stretched = current_length / @length
-            if stretched > 1
-                pull((stretched * @elasticity))
+        stretched = current_length / @length
+        if stretched > 1
+            pull((stretched * @elasticity))
+        end
+        count = 0
+        while @parent.calc_next_pos.distance_to(@rope_end.pos) > @length
+            pull(0.1)
+            count += 1
+            if count > 100
+                break
             end
-            count = 0
-            while @parent.calc_next_pos.distance_to(@rope_end.pos) > @length
-                pull(0.1)
-                count += 1
-        #        break if count > @elasticity
-                if count > 100
-
-                    break
-                end
-            end        
+        end        
     end
 end

@@ -103,12 +103,9 @@ class Level
     end
     def add_piece(piece)
         @pieces << piece
-
         piece.level = self
-
     end
     def remove_piece(piece)
-
         @pieces.delete(piece)
     end
     def draw_init
@@ -123,8 +120,9 @@ class Level
         end
         @image1.x = -@screenpos.x
         @image1.y = -@screenpos.y
-        @backgroundimage1.x = -@screenpos.x / 3
-        @backgroundimage2.x = -@screenpos.x / 3 + 4500
+        p -@screenpos.x / 3
+        @backgroundimage1.x = -((@screenpos.x / 3) % 4500)
+        @backgroundimage2.x = -((@screenpos.x / 3 ) % 4500) + 4500
 
         @backgroundimage1.y = -@screenpos.y
         @backgroundimage2.y = -@screenpos.y

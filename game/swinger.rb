@@ -169,5 +169,20 @@ class Swinger < GravityObject
         end
 
     end
+    def move!(time_interval = 0.1)
+        if calc_next_pos.y > @floor #|| calc_next_pos.y < 0
+                if @vel.y.abs > 20
+                    self.splat
+                else
+                    @vel.y *= -0.3
+                    @vel.x *= 0.9
+                    if @vel.x.abs < 0.1 
+                        become_grounded
+                    end
+                end
+            
+        end
+        super(time_interval)
+    end
 
 end
